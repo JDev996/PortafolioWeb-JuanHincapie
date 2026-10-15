@@ -1,0 +1,10 @@
+{
+  "description": "Showcases a frontend developer's skills, projects, and experience in a sleek, dark-themed portfolio with smooth navigation and interactive elements.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
