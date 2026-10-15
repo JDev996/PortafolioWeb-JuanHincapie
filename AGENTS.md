@@ -1,13 +1,13 @@
-# figma-make-app
+# Portafolio web — Juan Felipe Hincapié
 
-React + Vite + Tailwind CSS project running inside Figma Make.
+React + Vite + Tailwind CSS. Diseño inicial generado con Figma Make; ahora se desarrolla localmente y se publica en GitHub Pages.
 
 ## Development Server
 
-A Vite development server is **already running** on `$PORT` (default 8443). You don't need to start it manually.
-
-- Preview URL: The user can access the running app through the preview panel
-- Hot reload: Changes to source files are reflected immediately
+- `pnpm install` — instala dependencias (una vez, o cuando cambie `package.json`).
+- `pnpm dev` — servidor local en http://localhost:5173 con recarga en caliente.
+- `pnpm build` — compila a `dist/` con base `/PortafolioWeb-JuanHincapie/` (GitHub Pages).
+- `pnpm preview` — sirve `dist/` para revisar el build antes de publicar.
 
 ## Project Structure
 
@@ -18,7 +18,7 @@ This is the canonical project structure. Start with task-relevant files below. O
 - `src/index.css` - Global CSS entrypoint and Tailwind CSS v4 import
 - `index.html` - Vite HTML shell containing the `#root` element and loading `src/main.tsx`
 - `package.json` - Project dependencies and the Vite build, development, preview, and formatting scripts
-- `vite.config.ts` - Vite configuration with React, Tailwind CSS v4, and Figma Make plugins plus the `@` alias for `src`
+- `vite.config.ts` - Vite configuration with React, Tailwind CSS v4, the GitHub Pages `base` and the `@` alias for `src`
 - `.mise.toml` - Toolchain versions for Node.js and pnpm
 
 ## Dependencies
