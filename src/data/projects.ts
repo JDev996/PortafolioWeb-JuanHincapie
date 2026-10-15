@@ -10,6 +10,7 @@ export type Project = {
   number: string
   code: string // repositorio en GitHub
   demo?: string // opcional: el botón "Demo" solo aparece si existe
+  image?: string // opcional: ruta dentro de public/; si no hay, se dibuja la ilustración
 }
 
 export const projects: Project[] = [
@@ -23,6 +24,7 @@ export const projects: Project[] = [
     label: "ORDEN EN CADA PROCESO",
     number: "01",
     code: "https://github.com/JDev996/xyz-notaria-trazabilidad",
+    image: "img/projects/registra.webp",
   },
   {
     name: "JAJ Motos",
@@ -33,6 +35,7 @@ export const projects: Project[] = [
     label: "TU PRÓXIMA AVENTURA",
     number: "02",
     code: "https://github.com/JDev996/JAJMotos-Angular",
+    image: "img/projects/jaj-motos.webp",
   },
   {
     name: "TaskRewardPro",
@@ -43,6 +46,7 @@ export const projects: Project[] = [
     label: "CADA META CUENTA",
     number: "03",
     code: "https://github.com/FDev96/TaskRewardPro",
+    image: "img/projects/taskrewardpro.webp",
   },
   {
     name: "Sistema de Grabado Láser",
@@ -53,5 +57,6 @@ export const projects: Project[] = [
     label: "PRECISIÓN, HECHA SISTEMA",
     number: "04",
     code: "https://github.com/FDev96/sistema-grabado-laser",
+    image: "img/projects/grabado-laser.webp",
   },
 ]

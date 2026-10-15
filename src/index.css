@@ -1472,12 +1472,14 @@ footer {
   background: radial-gradient(ellipse, #0978bf29, transparent 65%);
   transform: translate(var(--space-x), var(--space-y));
 }
+/* La Tierra es un CÍRCULO perfecto (aspect-ratio 1/1) dos veces más ancho
+   que la pantalla; solo se ve su parte de arriba, que forma el horizonte. */
 .earth-horizon {
   position: absolute;
-  left: -40%;
-  top: 77%;
-  width: 180%;
-  height: 680px;
+  left: -50%;
+  top: 76%;
+  width: 200%;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   border-top: 2px solid #d1f5ff;
   background: #05233b;
@@ -1489,26 +1491,26 @@ footer {
   transform: translate(calc(var(--space-x) * -0.5), var(--space-y));
   overflow: hidden;
 }
+/* earth-cap.webp es la parte de arriba de un globo terrestre, renderizada a
+   partir de la "Blue Marble" de la NASA (dominio público) y centrada cerca
+   de Colombia. Mide lo mismo que el círculo de ancho (100% auto), así que
+   la Tierra llena el horizonte de borde a borde. La primera capa es un
+   degradado que oscurece la Tierra hacia abajo para que el texto se lea. */
 .earth-surface {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-image: linear-gradient(
+  background:
+    linear-gradient(
       180deg,
-      #1673a755 0%,
-      #041427b8 24%,
-      #020913 52%
+      #38bdf814 0,
+      transparent 2%,
+      #02091340 5%,
+      #020913b0 8%
     ),
-    url("https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=2400&q=85");
-  background-size:
-    100% 100%,
-    100% auto;
-  background-position:
-    center,
-    center 42%;
-  background-blend-mode: multiply, normal;
-  filter: saturate(0.55);
-  box-shadow: inset 0 5px 18px #7bdfff85;
+    url("/img/earth-cap.webp") top center / 100% auto no-repeat;
+  filter: saturate(0.8);
+  box-shadow: inset 0 4px 14px #7bdfff60;
 }
 .space-fade {
   position: absolute;
@@ -2217,14 +2219,8 @@ footer {
   }
   .earth-horizon {
     top: 79%;
-    height: 450px;
     width: 260%;
     left: -80%;
-  }
-  .earth-surface {
-    background-size:
-      100% 100%,
-      auto 100%;
   }
   .space-fade {
     background: linear-gradient(0deg, var(--bg), transparent 17%);
@@ -2309,4 +2305,34 @@ footer {
 .portrait-wrap img {
   filter: none;
   object-position: 50% 40%;
+}
+
+/* ============================================================
+   Imagen real de cada proyecto (reemplaza la ilustración .mockup)
+   ============================================================ */
+/* Mismo alto y borde que .mockup, para que las tarjetas no cambien de tamaño */
+.project-image {
+  height: 265px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: #101e26;
+}
+/* object-fit: cover llena el espacio sin deformar la imagen (recorta lo que sobre) */
+.project-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.project-card:hover .project-image img {
+  transform: scale(1.03);
+}
+/* En celular la tarjeta es más angosta: en vez de un alto fijo (que recortaría
+   los lados), la caja toma la misma proporción de las imágenes y se ven completas. */
+@media (max-width: 760px) {
+  .project-image {
+    height: auto;
+    aspect-ratio: 566 / 265;
+  }
 }

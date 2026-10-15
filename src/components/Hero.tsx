@@ -13,7 +13,7 @@ export default function Hero() {
       <div className="hero-main container">
         <div className="hero-copy">
           <div className="availability">
-            <span /> DISPONIBLE PARA NUEVOS RETOS
+            <span /> ABIERTO A OPORTUNIDADES
           </div>
           <p className="intro">
             Hola, soy <span>Juan Felipe</span>{" "}

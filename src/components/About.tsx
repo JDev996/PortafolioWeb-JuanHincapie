@@ -8,14 +8,14 @@ export default function About() {
         <SectionTitle
           number="02"
           title="SOBRE MÍ"
-          subtitle="Más que escribir código."
+          subtitle="Quién soy y cómo trabajo."
         />
         <div className="about-layout">
           <div className="about-copy">
             <h3>
-              Curioso por naturaleza.
+              Del soporte TI
               <br />
-              <span>Desarrollador por convicción.</span>
+              <span>al desarrollo web.</span>
             </h3>
             <p>
               Soy Juan Felipe Hincapié Machado, Desarrollador Frontend

@@ -18,7 +18,19 @@ type ProjectCardProps = {
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <article className="project-card">
-      <ProjectMockup kind={project.kind} />
+      {/* Si el proyecto tiene imagen se muestra la foto; si no, la ilustración.
+          BASE_URL antepone "/PortafolioWeb-JuanHincapie/" en GitHub Pages. */}
+      {project.image ? (
+        <div className="project-image">
+          <img
+            src={`${import.meta.env.BASE_URL}${project.image}`}
+            alt={`Vista de ${project.name}`}
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        <ProjectMockup kind={project.kind} />
+      )}
       <div className="project-body">
         <div className="project-meta">
           <span className="project-type">
