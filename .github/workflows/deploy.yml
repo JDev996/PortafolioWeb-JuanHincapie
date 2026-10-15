@@ -1,14 +1,20 @@
-name: Deploy to GitHub Pages
+# Compila el portafolio con Vite y lo publica en GitHub Pages.
+# Se ejecuta en cada push a main, o a mano desde la pestaña "Actions".
+# Requisito: Settings → Pages → Source = "GitHub Actions".
+name: Publicar en GitHub Pages
 
 on:
   push:
-    branches: [main, ramajuan]
+    branches: [main]
+  workflow_dispatch:
 
+# Lo mínimo necesario: leer el código y publicar en Pages.
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Si llegan dos push seguidos, cancela el despliegue anterior y deja solo el último.
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -17,31 +23,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Descargar el código
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@v4
         with:
-          version: latest
+          version: 10
 
-      - uses: actions/setup-node@v4
+      - name: Instalar Node.js 22 (con caché de dependencias)
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - name: Instalar dependencias exactas del pnpm-lock.yaml
+        run: pnpm install --frozen-lockfile
 
-      - run: pnpm build
+      - name: Revisar tipos de TypeScript
+        run: pnpm exec tsc --noEmit
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Compilar a dist/
+        run: pnpm build
+
+      - name: Empaquetar dist/ para Pages
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
-    needs: build
+    needs: build # solo publica si el build salió bien
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: Publicar en GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
