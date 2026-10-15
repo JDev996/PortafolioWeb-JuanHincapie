@@ -4,18 +4,62 @@
 // Contact no sabe qué pasa al descargar el CV (hoy abre un aviso; mañana
 // podría descargar el PDF); solo la llama cuando se hace clic en el botón.
 // Así el "qué hacer" lo decide el padre y el "cuándo" lo decide el hijo.
-import { useState } from "react"
+import { useState, type FormEvent } from "react"
 import Icon, { type IconName } from "./Icon"
 import SectionTitle from "./SectionTitle"
 import { LINKS, external } from "../data/links"
+import { WEB3FORMS_KEY, WEB3FORMS_URL } from "../data/contact"
 
 type ContactProps = {
   onDownloadCv: () => void // función sin parámetros que no devuelve nada
 }
 
 export default function Contact({ onDownloadCv }: ContactProps) {
-  // El mensaje del formulario solo le importa a esta sección: estado propio.
-  const [formMessage, setFormMessage] = useState("")
+  // Estado del envío. Un "union type" limita los valores posibles a estos 4,
+  // así TypeScript avisa si escribimos mal alguno (por ejemplo "enviado").
+  const [estado, setEstado] = useState<"idle" | "enviando" | "ok" | "error">("idle")
+  const [aviso, setAviso] = useState("")
+
+  // `async` permite usar `await`: esperar la respuesta del servidor sin
+  // congelar la página mientras tanto.
+  async function enviar(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault() // evita que el navegador recargue la página (envío "clásico")
+    const form = e.currentTarget // se guarda antes del await: después React ya no lo garantiza
+
+    if (!WEB3FORMS_KEY) {
+      setEstado("error")
+      setAviso("El formulario aún no está configurado. Escríbeme por correo o LinkedIn.")
+      return
+    }
+
+    setEstado("enviando")
+    setAviso("")
+    // FormData lee todos los campos con `name`; fromEntries lo vuelve un objeto
+    // { name: "...", email: "...", message: "..." }.
+    const datos = Object.fromEntries(new FormData(form))
+
+    try {
+      const res = await fetch(WEB3FORMS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          ...datos,
+          access_key: WEB3FORMS_KEY,
+          subject: "Nuevo mensaje desde tu portafolio",
+          from_name: "Portafolio web",
+        }),
+      })
+      const json = await res.json()
+      if (!res.ok || !json.success) throw new Error(json.message)
+      form.reset() // limpia los campos
+      setEstado("ok")
+      setAviso("¡Gracias! Tu mensaje llegó. Te respondo pronto.")
+    } catch {
+      // Sin internet, servicio caído o llave inválida: se ofrece otra vía de contacto.
+      setEstado("error")
+      setAviso("No se pudo enviar el mensaje. Intenta de nuevo o escríbeme por correo.")
+    }
+  }
 
   return (
     <section id="contacto" className="contact section container">
@@ -63,15 +107,7 @@ export default function Contact({ onDownloadCv }: ContactProps) {
           </button>
         </div>
       </div>
-      <form
-        className="contact-form"
-        onSubmit={(e) => {
-          e.preventDefault()
-          setFormMessage(
-            "Gracias por tu interés. El envío estará disponible cuando se configure el email de contacto.",
-          )
-        }}
-      >
+      <form className="contact-form" onSubmit={enviar}>
         <div className="form-title">
           <Icon name="code" size={17} />
           <span>HAGAMOS QUE SUCEDA</span>
@@ -108,12 +144,22 @@ export default function Contact({ onDownloadCv }: ContactProps) {
           rows={4}
           required
         />
-        <button className="button primary" type="submit">
-          Enviar <Icon name="arrow" size={18} />
+        {/* Trampa para bots: un humano no ve esta casilla, pero un bot que
+            llena todo la marca, y Web3Forms descarta ese envío. */}
+        <input
+          type="checkbox"
+          name="botcheck"
+          style={{ display: "none" }}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+        {/* disabled evita que se envíe dos veces mientras espera respuesta */}
+        <button className="button primary" type="submit" disabled={estado === "enviando"}>
+          {estado === "enviando" ? "Enviando…" : "Enviar"} <Icon name="arrow" size={18} />
         </button>
-        {formMessage && (
-          <p className="form-message" role="status">
-            {formMessage}
+        {aviso && (
+          <p className={`form-message ${estado === "error" ? "error" : ""}`} role="status">
+            {aviso}
           </p>
         )}
         <p className="form-note">

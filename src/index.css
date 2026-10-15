@@ -2336,3 +2336,12 @@ footer {
     aspect-ratio: 566 / 265;
   }
 }
+
+/* Formulario de contacto: aviso de error y botón mientras envía */
+.form-message.error {
+  color: #f87171;
+}
+.contact-form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
